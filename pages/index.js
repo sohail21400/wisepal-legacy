@@ -3,7 +3,10 @@
 // : make this imam
 // : if messages's index == 0 don't display
 // : make the first letter capital in the user prompt
-// : show a beautiful welcome page which disappears after texting
+// TODO: show a beautiful welcome page which disappears after texting
+// TODO: sending "Can i pray fajir at 12 pm?" as second messages only puts loading icon
+// TODO: integrate logging
+// TODO: system messages should be passed in the chat.js inside api route, not here
 
 
 import { useState, useRef, useEffect } from 'react'
@@ -18,7 +21,7 @@ export default function Home() {
   var [userInput, setUserInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([
-    { role: "system", content: "Act as a Muslim imam who gives me guidance and advice on how to deal with life problems. Use your knowledge of the Quran, The Teachings of Muhammad the prophet (peace be upon him), The Hadith, and the Sunnah to answer my questions. Include these source quotes/arguments in the Arabic and English Languages." }
+    { "role": "assistant", "content": "Hi, I'm WisePal. I'm here to help you with your prayers. Ask me anything." },
   ]);
 
   const messageListRef = useRef(null);
@@ -110,10 +113,6 @@ export default function Home() {
         <div className={styles.cloud}>
           <div ref={messageListRef} className={styles.messagelist}>
             {messages.map((message, index) => {
-              // if index of message is 0, don't display
-              if (index === 0) {
-                return null
-              }
               return (
                 // The latest message sent by the user will be animated while waiting for a response
                 <div key={index} className={message.role === "user" && loading && index === messages.length - 1 ? styles.usermessagewaiting : message.role === "assistant" ? styles.apimessage : styles.usermessage}>
