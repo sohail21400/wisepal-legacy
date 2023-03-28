@@ -1,3 +1,11 @@
+// : change chatgpt icon
+// TODO: use stream data and show animation
+// : make this imam
+// : if messages's index == 0 don't display
+// : make the first letter capital in the user prompt
+// : show a beautiful welcome page which disappears after texting
+
+
 import { useState, useRef, useEffect } from 'react'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
@@ -7,10 +15,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 export default function Home() {
 
-  const [userInput, setUserInput] = useState("");
+  var [userInput, setUserInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([
-    { role: "assistant", content: "Hi there! How can I help?" }
+    { role: "system", content: "Act as a Muslim imam who gives me guidance and advice on how to deal with life problems. Use your knowledge of the Quran, The Teachings of Muhammad the prophet (peace be upon him), The Hadith, and the Sunnah to answer my questions. Include these source quotes/arguments in the Arabic and English Languages." }
   ]);
 
   const messageListRef = useRef(null);
@@ -41,7 +49,7 @@ export default function Home() {
     if (userInput.trim() === "") {
       return;
     }
-
+    userInput = userInput.charAt(0).toUpperCase() + userInput.slice(1)
     setLoading(true);
     const context = [...messages, { role: "user", content: userInput }];
     setMessages(context);
@@ -102,11 +110,15 @@ export default function Home() {
         <div className={styles.cloud}>
           <div ref={messageListRef} className={styles.messagelist}>
             {messages.map((message, index) => {
+              // if index of message is 0, don't display
+              if (index === 0) {
+                return null
+              }
               return (
                 // The latest message sent by the user will be animated while waiting for a response
                 <div key={index} className={message.role === "user" && loading && index === messages.length - 1 ? styles.usermessagewaiting : message.role === "assistant" ? styles.apimessage : styles.usermessage}>
                   {/* Display the correct icon depending on the message type */}
-                  {message.role === "assistant" ? <Image src="/openai.png" alt="AI" width="27" height="27" className={styles.boticon} priority={true} /> : <Image src="/usericon.png" alt="Me" width="27" height="27" className={styles.usericon} priority={true} />}
+                  {message.role === "assistant" ? <Image src="/wisepal.png" alt="AI" width="27" height="27" className={styles.boticon} priority={true} /> : <Image src="/usericon.png" alt="Me" width="27" height="27" className={styles.usericon} priority={true} />}
                   <div className={styles.markdownanswer}>
                     {/* Messages are being rendered in Markdown format */}
                     <ReactMarkdown linkTarget={"_blank"}>{message.content}</ReactMarkdown>
